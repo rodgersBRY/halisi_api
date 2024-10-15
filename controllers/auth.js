@@ -1,5 +1,5 @@
 const bcrypt = require("bcrypt");
-const jwt = require("jsonwebtoken");
+const passport = require("passport");
 
 const { throwError } = require("../helpers");
 const { addUser, editUser, getUserByEmail } = require("../models/user");
@@ -37,37 +37,35 @@ exports.register = async (req, res, next) => {
 };
 
 exports.login = async (req, res, next) => {
-  const { email, password } = req.body;
+  passport.authenticate("local", (err, user, info) => {
+    if (err) return next(err);
+    if (!user) return res.status(info.code).json({ msg: info.message });
 
-  let loadedUser;
-
-  try {
-    const user = await getUserByEmail(email);
-
-    if (!user) throwError("That user does not exist!", 404);
-
-    loadedUser = user;
-
-    const passwordMatch = await bcrypt.compare(password, loadedUser.password);
-    if (!passwordMatch) throwError("Wrong password!", 401);
-
-    const token = jwt.sign(
-      {
-        email: loadedUser.email,
-        userId: loadedUser._id.toString(),
-      },
-      process.env.JWT_SECRET_TOKEN,
-      { expiresIn: "1h" }
-    );
-
-    res.status(200).json({
-      userId: loadedUser._id.toString(),
-      loadedUser,
-      token,
+    req.logIn(user, (err) => {
+      if (err) return next(err);
+      return res.status(200).json({ msg: "Logged in successfully", user });
     });
-  } catch (err) {
-    next(err);
-  }
+  })(req, res, next);
+};
+
+exports.checkAuth = (req, res) => {
+  console.log(req.user);
+
+  res.status(200).json({
+    user: {
+      _id: req.user._id,
+      name: req.user.name,
+      email: req.user.email,
+      phone: req.user.phone,
+    },
+  });
+};
+
+exports.logout = (req, res) => {
+  req.logout((err) => {
+    if (err) return res.status(500).json({ msg: "Error logging out" });
+    res.status(200).json({ msg: "Logged out successfully" });
+  });
 };
 
 exports.updatePassword = async (req, res, next) => {

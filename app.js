@@ -3,10 +3,16 @@ const express = require("express"),
   cors = require("cors"),
   app = express(),
   path = require("path"),
+  { v4: uuidv4 } = require("uuid"),
+  session = require("express-session"),
+  passport = require("passport"),
+  MongoStore = require("connect-mongo"),
   connectDB = require("./services/db");
 
 require("dotenv").config();
+require("./services/passport")(passport);
 
+// connect to mongoDB
 connectDB();
 
 const authRoutes = require("./routes/auth"),
@@ -16,6 +22,30 @@ const authRoutes = require("./routes/auth"),
   blogRoutes = require("./routes/blog");
 
 const port = process.env.PORT || 4000;
+
+// Express session middleware
+app.use(
+  session({
+    genid: (req) => {
+      return uuidv4();
+    },
+    store: MongoStore.create({
+      mongoUrl: process.env.MONGO_URI,
+      collectionName: "sessions",
+      ttl: 14 * 24 * 60 * 60, // Session expiration time (14 days in this case)
+    }),
+    cookie: {
+      maxAge: 1000 * 60 * 60 * 24, // 1 day (in milliseconds)
+    },
+    secret: process.env.EXPRESS_SESSION_SECRET,
+    resave: false,
+    saveUninitialized: true,
+  })
+);
+
+// Passport middleware
+app.use(passport.initialize());
+app.use(passport.session());
 
 app
   .use(logger("dev"))

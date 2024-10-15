@@ -1,14 +1,16 @@
 const app = require("express").Router(),
   controller = require("../controllers/auth"),
   upload = require("../services/multer"),
-  isAuthenticated = require("../middleware/authguard");
+  { ensureAuthenticated } = require("../middleware/authguard");
 
 app.post("/register", controller.register);
 
 app.post("/login", controller.login);
 
+app.get("/me", ensureAuthenticated, controller.checkAuth);
+
 app
   .route("/upload")
-  .post(isAuthenticated, upload.single("cv"), controller.updateCV);
+  .post(ensureAuthenticated, upload.single("cv"), controller.updateCV);
 
 module.exports = app;

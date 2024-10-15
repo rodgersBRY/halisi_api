@@ -38,6 +38,7 @@ const User = model("User", userSchema);
 
 module.exports = {
   getUsers: () => User.find(),
+  getUser: (query) => User.findOne({ query }),
   getUserById: (id) => User.findById(id),
   getUserByEmail: (email) => User.findOne({ email: email }),
   addUser: (values) => new User(values).save().then((user) => user),
