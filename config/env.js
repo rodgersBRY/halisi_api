@@ -1,6 +1,7 @@
 const MONGO_URI = process.env["MONGO_URI"];
 const PORT = process.env["PORT"];
 const JWT_SECRET_TOKEN = process.env["JWT_SECRET_TOKEN"];
+const NODE_ENV = process.env["NODE_ENV"];
 
 const CLOUDINARY_API_KEY = process.env["CLOUDINARY_API_KEY"];
 const CLOUDINARY_SECRET_KEY = process.env["CLOUDINARY_SECRET_KEY"];
@@ -30,7 +31,7 @@ const GOOGLE_PRIVATE_KEY = process.env["GOOGLE_PRIVATE_KEY"];
 const SHEET_ID = process.env["SHEET_ID"];
 const TAB_NAME = process.env["TAB_NAME"];
 
-const LOG_MODE = process.env["LOG_MODE"];
+const LOG_LEVEL = process.env["LOG_LEVEL"];
 const CREATE_ADMIN = process.env["CREATE_ADMIN"];
 const ADMIN_EMAIL = process.env["ADMIN_EMAIL"];
 const ADMIN_PASS = process.env["ADMIN_PASS"];
@@ -62,5 +63,6 @@ module.exports = {
   ADMIN_EMAIL,
   ADMIN_PASS,
   TAB_NAME,
-  LOG_MODE,
+  LOG_LEVEL,
+  NODE_ENV,
 };
