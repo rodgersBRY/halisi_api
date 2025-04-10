@@ -46,11 +46,11 @@ class ExpressConfig {
     });
 
     const routes = [
-      { path: "/api/v1/users", handler: userRoutes },
-      { path: "/api/v1/jobs", handler: jobRoutes },
-      { path: "/api/v1/applications", handler: applicationRoutes },
-      { path: "/api/v1/feedback", handler: feedbackRoutes },
-      { path: "/api/v1/blogs", handler: blogRoutes },
+      { path: "/v1/users", handler: userRoutes },
+      { path: "/v1/jobs", handler: jobRoutes },
+      { path: "/v1/applications", handler: applicationRoutes },
+      { path: "/v1/feedback", handler: feedbackRoutes },
+      { path: "/v1/blogs", handler: blogRoutes },
     ];
 
     routes.forEach((route) => app.use(route.path, route.handler));
