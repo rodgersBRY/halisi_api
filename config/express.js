@@ -12,12 +12,23 @@ const responseLogger = require("../utils/response");
 
 class ExpressConfig {
   async init(app) {
+    const allowedOrigins = ["http://localhost:8080", "http://164.92.245.20"];
+
     app
       .use(helmet())
       .use(logger("dev"))
       .use(
         cors({
-          origin: ["http://localhost:8080", "https://halisitravels.com"],
+          origin: function (origin, callback) {
+            // Allow non-browser tools like curl/postman
+            if (!origin) return callback(null, true);
+            
+            if (allowedOrigins.includes(origin)) {
+              return callback(null, true);
+            } else {
+              return callback(new Error("Not allowed by CORS"));
+            }
+          },
         })
       )
       .use(express.urlencoded({ extended: true }))
