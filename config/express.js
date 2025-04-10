@@ -22,7 +22,7 @@ class ExpressConfig {
           origin: function (origin, callback) {
             // Allow non-browser tools like curl/postman
             if (!origin) return callback(null, true);
-            
+
             if (allowedOrigins.includes(origin)) {
               return callback(null, true);
             } else {
@@ -35,6 +35,15 @@ class ExpressConfig {
       .use(express.json())
       .use(responseLogger)
       .use("/uploads", express.static(path.join(__dirname, "uploads")));
+
+    // Add root route
+    app.get("/", (req, res) => {
+      res.json({
+        message: "Welcome to Halisi Travels API",
+        version: "1.0.0",
+        status: "active",
+      });
+    });
 
     const routes = [
       { path: "/api/v1/users", handler: userRoutes },
