@@ -12,7 +12,11 @@ const responseLogger = require("../utils/response");
 
 class ExpressConfig {
   async init(app) {
-    const allowedOrigins = ["http://localhost:8080", "http://164.92.245.20"];
+    const allowedOrigins = [
+      "http://localhost:8080",
+      "http://164.92.245.20",
+      "https://halisitravels.com",
+    ];
 
     app
       .use(helmet())
