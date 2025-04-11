@@ -16,7 +16,6 @@ class ExpressConfig {
       "http://localhost:8080",
       "http://164.92.245.20",
       "https://halisitravels.com",
-      "https://www.halisitravels.com",
     ];
 
     app
